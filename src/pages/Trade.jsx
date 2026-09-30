@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import VideoThumb from '../components/VideoThumb.jsx'
 import { Heart, Play, ShoppingCart, CheckCircle2, MoreVertical } from 'lucide-react'
 import Chips from '../components/Chips.jsx'
 import { tradeItems, img, formatKRW } from '../data/mock.js'
@@ -9,7 +11,7 @@ const likeNum = (s) => parseFloat(s) * (s.endsWith('K') ? 1e3 : 1)
 
 export default function Trade() {
   const [filter, setFilter] = useState('전체')
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(2)
 
   const items = useMemo(() => {
     switch (filter) {
@@ -56,7 +58,7 @@ export default function Trade() {
           <span>좋은 콘텐츠가<br />더 멀리, 더 크게</span>
         </div>
         <div className="dots">
-          {SLIDES.slice(0, 5).map((_, i) => (
+          {SLIDES.map((_, i) => (
             <button key={i} className={i === active ? 'is-active' : ''} onClick={() => setActive(i)} aria-label={`슬라이드 ${i + 1}`} />
           ))}
         </div>
@@ -67,13 +69,14 @@ export default function Trade() {
       <div className="grid3">
         {items.map((t) => (
           <article key={t.id} className="vcard vcard--trade">
-            <div className="vcard__thumb vcard__thumb--short">
-              <img src={img(t.seed)} alt="" loading="lazy" />
+            <Link to={`/play/trade/${t.id}`} className="vcard__thumb vcard__thumb--short" aria-label={`${t.title} 재생`}>
+              {t.video
+                ? <VideoThumb src={t.video} poster={t.poster} fallbackDuration={t.duration} />
+                : <><img src={img(t.seed)} alt="" loading="lazy" /><span className="duration">{t.duration}</span></>}
               {t.badge && <span className={`badge badge--${t.badge}`}>{t.badge === 'new' ? 'New' : 'Hot'}</span>}
-              <span className="duration">{t.duration}</span>
               {!t.sold && <span className="thumb-play"><Play size={20} fill="currentColor" /></span>}
               <span className="vcard__like"><Heart size={14} fill="currentColor" />{t.likes}</span>
-            </div>
+            </Link>
             <div className="vcard__body">
               <h3>{t.title}</h3>
               <p className="tags">{t.tags.map((x) => '#' + x).join(' ')}</p>

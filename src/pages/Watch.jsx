@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import VideoThumb from '../components/VideoThumb.jsx'
 import { Eye, Heart, Copyright, MoreVertical } from 'lucide-react'
 import Chips from '../components/Chips.jsx'
 import Badge from '../components/Badge.jsx'
@@ -30,17 +32,18 @@ export default function Watch() {
       <div className="grid3">
         {items.map((v) => (
           <article key={v.id} className="vcard">
-            <div className="vcard__thumb">
-              <img src={img(v.seed)} alt="" loading="lazy" />
+            <Link to={`/play/watch/${v.id}`} className="vcard__thumb" aria-label={`${v.title} 재생`}>
+              {v.video
+                ? <VideoThumb src={v.video} poster={v.poster} fallbackDuration={v.duration} />
+                : <><img src={img(v.seed)} alt="" loading="lazy" /><span className="duration">{v.duration}</span></>}
               {filter === '전체' && v.rank
                 ? <span className={`rank rank--${v.rank}`}>{v.rank}</span>
                 : <Badge type={v.badge} />}
-              <span className="duration">{v.duration}</span>
               <div className="vcard__stats">
                 <span><Eye size={16} />{v.views}</span>
                 <span><Heart size={15} fill="currentColor" />{v.likes}</span>
               </div>
-            </div>
+            </Link>
             <div className="vcard__body">
               <h3>{v.title}</h3>
               <p className="tags">{v.tags.map((t) => '#' + t).join(' ')}</p>

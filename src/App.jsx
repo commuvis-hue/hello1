@@ -7,11 +7,13 @@ import Fund from './pages/Fund.jsx'
 import FundDetail from './pages/FundDetail.jsx'
 import Trade from './pages/Trade.jsx'
 import Placeholder from './pages/Placeholder.jsx'
+import Player from './pages/Player.jsx'
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
+      <Route path="/play/:list/:id" element={<Player />} />
       <Route element={<AppLayout />}>
         <Route path="/watch" element={<Watch />} />
         <Route path="/create" element={<Create />} />
